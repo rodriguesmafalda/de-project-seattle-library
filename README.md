@@ -112,6 +112,9 @@ This will:
 
 - **dim_material_type**: This dimension table lists distinct material types used in checkouts, enabling cleaner joins and categorical analysis.
 
+- **vw_checkouts_enriched**: This final view enriches the checkout fact table by joining it with usage class information from the staging layer, allowing analysis by **material category** (Physical vs Digital) as well as by material type and year.
+
+
 ### Data Quality Tests
 
 To ensure the quality of the transformations, the following dbt tests were implemented:
@@ -119,13 +122,14 @@ To ensure the quality of the transformations, the following dbt tests were imple
 - **Not Null tests**:
   - `material_type` and `checkout_year` in `stg_library_checkouts`
   - `material_type` and `checkout_year` in `fct_checkouts`
-  - `material_type` in `dim_material_type`
+  - `material_type` and `usageclass` in `dim_material_type`
+  - `material_type`, `material_category`, and `checkout_year` in `vw_checkouts_enriched`
 - **Unique tests**:
   - `material_type` in `dim_material_type`
 
-Running `dbt test` validates that key fields are properly populated and that dimension tables do not have duplicate entries.
+Running `dbt test` validates that key fields are properly populated, that no nulls exist where not allowed, and that dimension tables do not have duplicate entries.
 
-![dbt_tests](images/dbt_tests.png)
+![dbt_tests](images/dbt_test.png)
 
 ---
 
@@ -133,14 +137,16 @@ Running `dbt test` validates that key fields are properly populated and that dim
 
 ### 6. Create a Looker Studio Dashboard
 
-- Connect Looker Studio to BigQuery.
-- Build visualizations such as:
-  - Total Checkouts by Material Type
-  - Year-over-Year Breakdown
-  - Distribution of Checkouts by Material Type (Pie Chart)
-  - Detailed Table of Total Checkouts
+The dashboard was built based on the enriched view `vw_checkouts_enriched`, allowing a richer analysis across material types, years, and usage classes.
 
----
+Access the dashboard here: [Seattle Library Checkouts Dashboard](https://lookerstudio.google.com/reporting/dad59883-b052-457f-9e6b-7014782a4971)
+
+- **Total Checkouts by Material Type** (Bar Chart)
+- **Distribution of Checkouts by Material Category** (Pie Chart)
+- **Detailed Table of Checkouts** (Table)
+- **Distribution of Checkouts by Material Category** (Pie Chart)
+
+![dashboards](dashboards/dashboards.png)
 
 ## ⚡ Getting Started
 

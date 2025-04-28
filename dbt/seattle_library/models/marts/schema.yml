@@ -1,0 +1,20 @@
+version: 2
+
+models:
+  - name: vw_checkouts_enriched
+    description: "View combining the fact table with material type dimension for enhanced analysis in dashboards."
+    columns:
+      - name: material_type
+        description: "The material type (e.g., BOOK, EBOOK, AUDIOBOOK) of the checkout."
+        tests:
+          - not_null
+      - name: material_category
+        description: "Grouped category for the material type (e.g., Physical, Digital)."
+      - name: checkout_year
+        description: "Year when the checkout occurred."
+        tests:
+          - not_null
+      - name: total_checkouts
+        description: "Total number of checkouts for that material type and year."
+        tests:
+          - not_null
