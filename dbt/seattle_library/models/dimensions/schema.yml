@@ -1,0 +1,11 @@
+version: 2
+
+models:
+  - name: dim_material_type
+    description: "Dimension table listing all distinct material types used in checkouts."
+    columns:
+      - name: material_type
+        description: "Type of material (e.g., BOOK, EBOOK, AUDIOBOOK)."
+        tests:
+          - not_null
+          - unique

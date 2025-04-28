@@ -1,0 +1,62 @@
+id: data_load_gcs
+namespace: project_library
+
+tasks:
+
+  # Download 2018
+  - id: download_checkouts_2018
+    type: io.kestra.plugin.core.http.Download
+    uri: "https://data.seattle.gov/resource/tmmm-ytt6.csv?$where=checkoutyear=2018&$order=checkoutyear%20ASC&$limit=50000"
+
+  - id: upload_2018_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.download_checkouts_2018.uri }}"
+    to: "gs://{{ kv('GCP_BUCKET_NAME') }}/raw/library_checkouts_2018.csv"
+
+  # Download 2019
+  - id: download_checkouts_2019
+    type: io.kestra.plugin.core.http.Download
+    uri: "https://data.seattle.gov/resource/tmmm-ytt6.csv?$where=checkoutyear=2019&$order=checkoutyear%20ASC&$limit=50000"
+
+  - id: upload_2019_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.download_checkouts_2019.uri }}"
+    to: "gs://{{ kv('GCP_BUCKET_NAME') }}/raw/library_checkouts_2019.csv"
+
+  # Download 2020
+  - id: download_checkouts_2020
+    type: io.kestra.plugin.core.http.Download
+    uri: "https://data.seattle.gov/resource/tmmm-ytt6.csv?$where=checkoutyear=2020&$order=checkoutyear%20ASC&$limit=50000"
+
+  - id: upload_2020_to_gcs
+    type: io.kestra.plugin.gcp.gcs.Upload
+    from: "{{ outputs.download_checkouts_2020.uri }}"
+    to: "gs://{{ kv('GCP_BUCKET_NAME') }}/raw/library_checkouts_2020.csv"
+
+  # Create external table on BigQuery
+  - id: create_external_table
+    type: io.kestra.plugin.gcp.bigquery.Query
+    sql: |
+      CREATE OR REPLACE EXTERNAL TABLE `{{ kv('GCP_PROJECT_ID') }}.{{ kv('GCP_DATASET') }}.raw_checkouts`
+      OPTIONS (
+        format = 'CSV',
+        uris = [
+          'gs://{{ kv('GCP_BUCKET_NAME') }}/raw/library_checkouts_2018.csv',
+          'gs://{{ kv('GCP_BUCKET_NAME') }}/raw/library_checkouts_2019.csv',
+          'gs://{{ kv('GCP_BUCKET_NAME') }}/raw/library_checkouts_2020.csv'
+        ],
+        skip_leading_rows = 1
+      );
+
+  - id: purge_files
+    type: io.kestra.plugin.core.storage.PurgeCurrentExecutionFiles
+    description: Disable this if you'd like to inspect the outputs in Kestra.
+    disabled: false
+
+pluginDefaults:
+  - type: io.kestra.plugin.gcp
+    values:
+      serviceAccount: "{{ kv('GCP_CREDS') }}"
+      projectId: "{{ kv('GCP_PROJECT_ID') }}"
+      location: "{{ kv('GCP_LOCATION') }}"
+      bucket: "{{ kv('GCP_BUCKET_NAME') }}"

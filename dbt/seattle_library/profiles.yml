@@ -1,0 +1,11 @@
+default:
+  target: dev
+  outputs:
+    dev:
+      type: bigquery
+      method: service-account
+      project: de-zoomcamp-458123
+      dataset: seattle_library_checkouts_dataset
+      threads: 4
+      timeout_seconds: 300
+      keyfile: /Users/mafalda.rodrigues/.gc/keys/de-zoomcamp-creds.json

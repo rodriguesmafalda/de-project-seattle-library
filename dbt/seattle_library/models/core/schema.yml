@@ -1,0 +1,12 @@
+version: 2
+
+models:
+  - name: fct_checkouts
+    description: "Fact table summarizing the number of checkouts by material type and year."
+    columns:
+      - name: material_type
+        description: "The material format (e.g., BOOK, EBOOK, AUDIOBOOK)."
+      - name: checkout_year
+        description: "Year of checkout."
+      - name: total_checkouts
+        description: "Total number of checkouts."
