@@ -12,14 +12,15 @@ The project was built as part of a data engineering course to showcase end-to-en
 ## 📦 Dataset
 
 - **Source**: [Seattle Public Library – Checkouts by Title](https://data.seattle.gov/Community-and-Culture/Checkouts-by-Title/tmmm-ytt6)
-- **Description**: Records of books, eBooks, and other media checked out from Seattle Public Library branches.
+- **Description**: This dataset contains records of books, eBooks, audiobooks, and other materials checked out from Seattle Public Library branches. Each record includes detailed information such as the title, creator, material type, usage class (physical or digital), checkout date, and the number of checkouts.
+- **Full Dataset Scope**: The original dataset spans from 2005 to 2023, containing millions of records across various material types and library branches.
 - **Subset selected**:
   - **Years**: 2018, 2019, and 2020
   - **Material Types**: All types (BOOK, EBOOK, AUDIOBOOK, etc.)
-  - **Fields**: Title, Creator, Material Type, Checkout Date, Checkout Year, Checkout Month, Usage Class
-
-This subset was chosen to maintain a manageable project size while still allowing meaningful trend analysis.
-
+  - **Fields Used**: Title, Creator, Material Type, Checkout Year, Checkout Month, Usage Class, Checkouts, Checkout Type, ISBN, Publisher, Subjects, Publication Year
+- **Reason for Selection**:
+A subset of three years (2018–2020) was selected to maintain a manageable project size while still allowing meaningful trend and categorical analysis.
+This subset enables building an end-to-end pipeline, ensuring performance and visualization clarity without overwhelming processing resources.
 ---
 
 ## 🛠️ Architecture
